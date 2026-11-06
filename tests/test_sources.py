@@ -93,6 +93,8 @@ def test_esef(net):
     f = sources.esef_latest("ferrari")
     assert f["period"] == "2025-12-31"
     assert f["url"] == "https://filings.xbrl.org/549300ZTFBTXS1XOSZ93/2025-12-31/ESEF/NL/0/ferrari-2025.xhtml"
+    # filings.xbrl.org refuses browser-like User-Agents (403): the tool names itself
+    assert all(ua.startswith("SpiderAnalyst/") for u, ua in net if "xbrl.org" in u)
 
 
 def test_yahoo_recovers_from_429_with_crumb(net):

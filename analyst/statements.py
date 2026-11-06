@@ -352,6 +352,27 @@ def _amounts(nums: list, key: str) -> list:
     return nums
 
 
+CELL = re.compile(r"\(?-?\d[\d,]*(?:\.\d+)?\)?%?|[—–]|(?<![\w-])-(?![\w-])|[A-Za-z]")
+
+
+def _with_dashes(nums: list, label: str, text: str, n: int) -> list:
+    """A row with fewer amounts than columns, as one cell per column: an empty cell is printed as a dash
+    ("Repurchases of common stock — (600,022) —") and becomes None, so the amounts keep their own columns."""
+    want = [f["display"].strip("$€£ ") for f in nums]
+    flat = re.sub(r"\s+", " ", text)
+    for m in re.finditer(re.escape(re.sub(r"\s+", " ", label.strip())), flat, re.I):
+        cells = []
+        for t in CELL.finditer(flat, m.end(), min(len(flat), m.end() + 240)):
+            if t.group().isalpha():
+                break
+            cells.append(None if t.group() in "—–-" else t.group())
+        amounts = [c for c in cells if c is not None]
+        if len(cells) == n and len(amounts) < n and amounts == want:
+            it = iter(nums)
+            return [None if c is None else next(it) for c in cells]
+    return nums
+
+
 def _columns(nums: list, years: list, quarters: Optional[list] = None) -> tuple:
     """(current, comparative) figure of a row, by the years (or quarter codes) heading the page's columns."""
     if quarters and len(nums) >= len(quarters):
@@ -412,7 +433,7 @@ def extract(facts: list[dict], page_text: dict[int, str]) -> dict:
     metrics, years = {}, None
     head: dict[str, dict] = {}
     for key, cands in found.items():
-        page, nums, _ = max(cands, key=lambda c: (titled.get(c[0], 0) >= 2 and kind_of.get(c[0]) == statement_of(key), titled.get(c[0], 0),
+        page, nums, label = max(cands, key=lambda c: (titled.get(c[0], 0) >= 2 and kind_of.get(c[0]) == statement_of(key), titled.get(c[0], 0),
                                                    kind_of.get(c[0]) == statement_of(key), page_hits[c[0]], _line_rank(key, c[2]),
                                                    len(c[1]) >= 2, -c[0]))
         has_statement = any(k == statement_of(key) and titled.get(p, 0) >= 2 for p, k in kind_of.items())
@@ -421,7 +442,11 @@ def extract(facts: list[dict], page_text: dict[int, str]) -> dict:
         text = page_text.get(page, "")
         ys = header_years(text)
         qs = header_quarters(text)
+        if ys and not qs and len(nums) < len(ys):
+            nums = _with_dashes(nums, label, text, len(ys))
         cur_f, prev_f = _columns(nums, ys, qs)
+        if cur_f is None:
+            continue                                   # nothing in the current column ("—")
         scale = 1.0 if key in PER_SHARE else page_scale(text)
         kind = F.METRICS[key][2] if key in F.METRICS else "flow"
         if kind == "shares" and not re.search(r"shares? in (thousands|millions)|in (thousands|millions), except per share", text[:2500], re.I):

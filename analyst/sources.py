@@ -29,6 +29,8 @@ CACHE = Path(os.environ.get("SPIDER_DATA_DIR", ROOT / ".data"))
 CONFIG_FILE = Path.home() / ".spider-analyst" / "config.json"
 DEFAULT_SEC_UA = "SpiderAnalyst/1.0 (local research tool; spider-analyst@example.com)"
 BROWSER_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+# filings.xbrl.org answers 403 to browser-like User-Agents from scripts (seen in November 2026): name the tool instead
+TOOL_UA = "SpiderAnalyst/1.0 (+https://github.com/alessiocriscio/spider-analyst)"
 SEC_FORMS = ("10-K", "10-K/A", "20-F", "40-F", "10-Q", "S-1", "S-1/A", "F-1", "F-1/A", "424B4", "424B1")
 REG_FORMS = ("424B4", "424B1", "S-1/A", "S-1", "F-1/A", "F-1")        # IPO prospectuses and registration statements
 # the documents a user can pick: annual and quarterly reports, results releases (8-K item 2.02), prospectuses
@@ -84,6 +86,8 @@ def fetch(url: str, *, ttl: Optional[float] = DAY, max_bytes: int = MAX_DOC) -> 
             time.sleep(wait)
         _last_sec = time.time()
         headers["User-Agent"] = sec_user_agent()
+    elif host.endswith("xbrl.org"):
+        headers["User-Agent"] = TOOL_UA
     else:
         headers["User-Agent"] = BROWSER_UA
     try:

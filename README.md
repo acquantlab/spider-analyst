@@ -4,6 +4,8 @@
 
 Spider Analyst: an animated spider reads financial documents (10-K, ESEF, PDFs, market data) and builds a live report. Runs locally on macOS, Windows and Linux in a Chromium browser. Completely Open Source and free.
 
+![The spider reading the income statement of Netflix's 2022 10-K while the report fills in](docs/screenshots/spider.gif)
+
 An AI reads every document first — what it is, how the business works, the results, the risks, the offering — and
 the spider then walks over the pages that hold what it found. Every number the AI writes is checked against the
 page it comes from.
@@ -12,6 +14,22 @@ A from-scratch rebuild of the idea shown in @buildwithbrock's videos. It contain
 
 The interface is in English, or in Italian when the operating system's language is Italian (`SPIDER_LANG=en` or
 `SPIDER_LANG=it` forces one). The report can be produced in English or Italian; it starts in the interface language.
+
+## Screenshots
+
+Netflix's 2022 10-K (FinanceBench PDF), read by a Claude subscription through Claude Code; the texts are the AI's
+own, unedited.
+
+| | |
+|---|---|
+| ![The spider on page 40, the income statement; on the right the figures it has read, with their page](docs/screenshots/reading.png) | ![The final card: revenue, net income, diluted EPS and free cash flow with the year-on-year change and the page of each figure; on the right what the AI understood](docs/screenshots/card.png) |
+| **Reading** — every figure lights up on the page and lands in the report with its page. | **The card** — headline figures, findings and checks, each citing its page. |
+| ![Search for "ferrari": the ESEF annual reports of five years from filings.xbrl.org and the listed shares](docs/screenshots/search.png) | ![Four slides of the PowerPoint export: headline figures, results chart, margins and balance sheet, income statement table](docs/screenshots/slides.png) |
+| **Search** — annual reports, quarterly reports and earlier years, to analyse or download. | **PowerPoint** — editable charts and tables, every slide names its source pages. |
+
+![The first two pages of the PDF report: card, summary, findings, financial highlights and charts](docs/screenshots/report.png)
+
+**PDF report** — the same analysis on paper; the figures are also downloadable as an Excel workbook.
 
 ## Requirements
 

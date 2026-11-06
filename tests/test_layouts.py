@@ -184,3 +184,22 @@ def test_amounts_and_per_share_under_one_label_and_a_two_digit_amount(no_ai, tmp
     card = {t["key"]: t for t in a["card"]}
     assert card["net_income"]["display"] == "−$6.8B" and card["net_income"]["prev_display"] == "$78.0M"
     assert card["eps_diluted"]["display"] == "−$12.35"
+
+
+def test_a_dash_keeps_the_amounts_in_their_own_columns(no_ai, tmp_path):
+    """Netflix 2022: "Repurchases of common stock — (600,022) —" is a 2021 buyback, not a 2022 one."""
+    pytest.importorskip("reportlab")
+    cf = _statement("CONSOLIDATED STATEMENTS OF CASH FLOWS", "(in thousands)", ["2022", "2021", "2020"], [
+        ("Net income", "$ 4,491,924", "$ 5,116,228", "$ 2,761,395"),
+        ("Net cash provided by operating activities", "2,026,257", "392,610", "2,427,077"),
+        ("Purchases of property and equipment", "(407,729)", "(524,585)", "(497,923)"),
+        ("Net cash used in investing activities", "(2,076,392)", "(1,339,853)", "(505,354)"),
+        ("Repurchases of common stock", "—", "(600,022)", "—"),
+        ("Dividends paid", "(10,000)", "—", "(9,000)"),
+        ("Net cash used in financing activities", "(664,254)", "(1,149,776)", "1,237,311")])
+    data = _pdf(tmp_path / "k.pdf", [[(50, 740, "Example Streaming, Inc.", True, False)], cf])
+    a = pipeline.run({"kind": "upload", "data": data, "name": "k.pdf", "lang": "en"}, lambda *_: None)
+    m = a["fin"]["metrics"]
+    assert "buybacks" not in m
+    assert m["dividends"]["cur"] == 10_000_000 and not m["dividends"]["prev"]
+    assert m["capex"]["cur"] == 407_729_000 and m["capex"]["prev"] == 524_585_000

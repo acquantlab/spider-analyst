@@ -42,8 +42,10 @@ financial instrument** and run locally (macOS, Windows, Linux) in a Chromium-bas
       Remaining gaps: Boston Properties (an LP/REIT 10-K) has no EPS; Generali tags no EPS; two explained gaps
       (AMD gross profit: amortisation sits in between; Boeing operating costs); Air Liquide's exchange-rate line is
       an issuer concept with a French label, shown as an explained gap.
-- [ ] SEC EDGAR live and a real AI provider from the cloud dev session: sec.gov was not reachable and no API key is
-      available there; both are covered by simulated responses in the tests.
+- [x] A real AI provider: the Claude subscription through the Claude Code CLI read Netflix's 2022 10-K end to end
+      (the README screenshots).
+- [ ] SEC EDGAR live from the cloud dev session: www.sec.gov is not reachable there; covered by simulated responses
+      in the tests.
 - [ ] Safari / Firefox: not supported (the app shows a notice); only Chromium-based browsers are tested.
 
 ## Data sources

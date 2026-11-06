@@ -108,6 +108,22 @@ no longer called "Q2" from the calendar (Apple's fiscal Q3 ends in June): "3M to
 
 - [x] README / PLAN updated, tests green (63), committed and pushed; answer in Italian.
 
+### 6. Screenshots on the GitHub page (November 2026)
+
+- [x] `docs/screenshots/`: `spider.gif` (7 s on Netflix p. 40, 800 px, 3.6 MB), `reading.png`, `card.png`,
+      `search.png`, `slides.png`, `report.png` (1920 px, 256 colours); README section "Screenshots".
+      Made with `$SC/shots/shots.mjs` (Playwright, video for the GIF) and `$SC/shots/search.mjs`; slides and report
+      rendered with LibreOffice + pypdfium2, montages with ImageMagick.
+- [x] First run with a **real AI**: the `claude` CLI of the dev container works as the "Claude subscription"
+      provider; Netflix 2022 10-K read in ~40 s, every cited number matched.
+- [x] Bugs the screenshots exposed, fixed:
+  - a dash in an empty column ("Repurchases of common stock — (600,022) —") shifted the 2021 buyback into 2022:
+    `statements._with_dashes` keeps each amount in its column; a dash in the current column means no figure
+    (test `test_a_dash_keeps_the_amounts_in_their_own_columns`; 45 real documents re-run, only Netflix changed);
+  - filings.xbrl.org answers 403 to browser-like User-Agents: requests there send `TOOL_UA` (ESEF search was empty).
+- Still open (honest): the AI writes amounts as printed ("$31,615,550 thousand") rather than scaled; the live
+  table shows unscaled values for non-headline rows (2,711,041); "Other figures" can list prose fragments as labels.
+
 ## How to verify
 
 Scratchpad: `/tmp/claude-0/-home-user-spider-analyst/813b7837-9089-595e-b3bf-d58e614c7198/scratchpad` (`$SC`).
@@ -118,4 +134,5 @@ Scratchpad: `/tmp/claude-0/-home-user-spider-analyst/813b7837-9089-595e-b3bf-d58
   vs H1 2025, 5/5 checks).
 - ESEF by name: `cd $SC && SPIDER_DATA_DIR=$SC/esefcache .venv/bin/python -I esefnames.py "air liquide" generali …`
 - FinanceBench list: `$SC/fb_list.txt`; blobless clone at `/home/user/patronus-ai/financebench` (outside the repo).
-- Network from the dev session: SEC and filings.xbrl.org reachable; company websites and borsaitaliana.it are not.
+- Network from the dev session: data.sec.gov and filings.xbrl.org reachable (www.sec.gov is not, since November
+  2026); company websites and borsaitaliana.it are not. The real `claude` CLI works (provider "Claude subscription").
