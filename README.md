@@ -1,6 +1,6 @@
 # Spider Analyst
 
-*by Alessio Criscio*
+*by AC Quant Lab*
 
 Spider Analyst: an animated spider reads financial documents (10-K, ESEF, PDFs, market data) and builds a live report. Runs locally on macOS, Windows and Linux in a Chromium browser. Completely Open Source and free.
 
