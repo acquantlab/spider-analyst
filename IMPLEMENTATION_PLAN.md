@@ -4,9 +4,9 @@ Working notes to resume after a context reset. Read this first, then `PLAN.md` (
 
 ## Ground rules
 
-- Repo `alessiocriscio/spider-analyst`, branch `main`, push directly (no PRs unless asked). The user installs from the
+- Repo `acquantlab/spider-analyst` (renamed from alessiocriscio in November 2026), branch `main`, push directly (no PRs unless asked). The user installs from the
   zip into a folder named `spider-analyst-main`.
-- Commit author: `alessiocriscio <262817053+alessiocriscio@users.noreply.github.com>`; trailers
+- Commit author: `acquantlab <262817053+acquantlab@users.noreply.github.com>`; trailers
   `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` and `Claude-Session: https://claude.ai/code/session_01SJf4EE1JxcFnmUfYg7YFZu`.
   No model ids in commits or code.
 - Answer the user in Italian, concise, honest; cite sources.

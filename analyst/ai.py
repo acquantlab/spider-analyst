@@ -302,7 +302,7 @@ def test() -> str:
 def _call_openai_compatible(pid: str, key: str, model: str, system: str, prompt: str, schema: dict, max_tokens: int = 16000) -> Optional[dict]:
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
     if pid == "openrouter":
-        headers.update({"HTTP-Referer": "https://github.com/alessiocriscio/spider-analyst", "X-Title": "Spider Analyst"})
+        headers.update({"HTTP-Referer": "https://github.com/acquantlab/spider-analyst", "X-Title": "Spider Analyst"})
     system = (system + " Answer only with a valid JSON object conforming to this JSON Schema, with no other text: "
               + json.dumps(schema, ensure_ascii=False))
     body = {"model": model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}],
